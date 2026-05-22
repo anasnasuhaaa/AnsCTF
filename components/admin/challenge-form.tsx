@@ -5,7 +5,8 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label"; // Pastikan Anda mengimpor komponen Label
+import { Label } from "@/components/ui/label"; 
+import { ChallengeUploadButton } from "@/components/upload/upload-button";
 
 import {
   Select,
@@ -24,6 +25,8 @@ type Props = {
     points: number;
     flag: string;
     categoryId: string;
+    attachmentUrl?: string;
+    attachmentName?: string;
   };
 };
 
@@ -36,6 +39,8 @@ export function ChallengeForm({ categories, onSubmit, initialValues }: Props) {
     points: initialValues?.points || 100,
     flag: initialValues?.flag || "",
     categoryId: initialValues?.categoryId || "",
+    attachmentUrl: initialValues?.attachmentUrl || "",
+    attachmentName: initialValues?.attachmentName || "",
   });
 
   async function handleSubmit() {
@@ -46,7 +51,7 @@ export function ChallengeForm({ categories, onSubmit, initialValues }: Props) {
 
   return (
     <div className="space-y-6">
-      
+
       {/* Title Field */}
       <div className="space-y-2.5">
         <Label className="text-zinc-300">Challenge Title</Label>
@@ -58,7 +63,7 @@ export function ChallengeForm({ categories, onSubmit, initialValues }: Props) {
         />
       </div>
 
-      {/* Category & Points in a Grid */}
+      {/* Category & Points (2 Columns Grid) */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <div className="space-y-2.5">
           <Label className="text-zinc-300">Category</Label>
@@ -71,8 +76,8 @@ export function ChallengeForm({ categories, onSubmit, initialValues }: Props) {
             </SelectTrigger>
             <SelectContent className="border-zinc-800 bg-zinc-950 text-zinc-200">
               {categories.map((category) => (
-                <SelectItem 
-                  key={category.id} 
+                <SelectItem
+                  key={category.id}
                   value={category.id}
                   className="focus:bg-emerald-500/20 focus:text-emerald-400 cursor-pointer"
                 >
@@ -106,6 +111,47 @@ export function ChallengeForm({ categories, onSubmit, initialValues }: Props) {
         />
       </div>
 
+      {/* Attachment Area (Dedicated Block) */}
+      <div className="space-y-3 rounded-xl border border-dashed border-zinc-700/60 bg-zinc-900/30 p-5 transition-colors hover:bg-zinc-900/50">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <Label className="text-zinc-300 text-base">Attachment Data</Label>
+            <p className="text-sm text-zinc-500 mt-1">Upload a file for users to download (optional).</p>
+          </div>
+          
+          <div className="shrink-0">
+            <ChallengeUploadButton
+              onUploaded={(data) => {
+                setForm({
+                  ...form,
+                  attachmentUrl: data.url,
+                  attachmentName: data.name,
+                });
+              }}
+            />
+          </div>
+        </div>
+
+        {form.attachmentName && (
+          <div className="mt-4 flex items-center gap-3 rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-400 animate-in fade-in zoom-in-95">
+            <svg className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span className="truncate font-medium">{form.attachmentName}</span>
+            <button 
+              type="button" 
+              onClick={() => setForm({...form, attachmentName: "", attachmentUrl: ""})}
+              className="ml-auto shrink-0 text-emerald-500/70 hover:text-red-400 transition-colors"
+              title="Remove attachment"
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        )}
+      </div>
+
       {/* Flag Field */}
       <div className="space-y-2.5">
         <Label className="text-zinc-300">Flag</Label>
@@ -113,13 +159,13 @@ export function ChallengeForm({ categories, onSubmit, initialValues }: Props) {
           placeholder="AnsCTF{h4ck3r_m4n}"
           value={form.flag}
           onChange={(e) => setForm({ ...form, flag: e.target.value })}
-          className="h-11 font-mono text-emerald-400 bg-zinc-950/50 border-zinc-800 focus-visible:ring-1 focus-visible:ring-emerald-400 focus-visible:border-transparent transition-all placeholder:text-zinc-600"
+          className="h-11 font-mono text-emerald-400 bg-zinc-950/50 border-zinc-800 focus-visible:ring-1 focus-visible:ring-emerald-400 focus-visible:border-transparent transition-all placeholder:text-zinc-700"
         />
         <p className="text-xs text-zinc-500">The exact string users need to submit to solve this challenge.</p>
       </div>
 
       {/* Submit Button */}
-      <div className="pt-2">
+      <div className="pt-4 border-t border-zinc-800/60">
         <Button
           onClick={handleSubmit}
           disabled={loading}

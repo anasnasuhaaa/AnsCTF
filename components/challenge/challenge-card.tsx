@@ -25,13 +25,10 @@ export function ChallengeCard({ challenge }: Props) {
 
   async function handleSubmit() {
     setLoading(true);
-
     try {
       const res = await fetch("/api/challenges/submit", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           challengeId: challenge.id,
           flag,
@@ -56,7 +53,7 @@ export function ChallengeCard({ challenge }: Props) {
 
       toast.success(data.message);
       setFlag("");
-      setOpen(false); // Tutup modal otomatis jika benar
+      setOpen(false); 
     } catch {
       toast.error("Something went wrong");
     } finally {
@@ -68,13 +65,11 @@ export function ChallengeCard({ challenge }: Props) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className={`group relative flex min-h-[220px] w-full flex-col justify-between overflow-hidden rounded-2xl border p-6 text-left backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 ${
-          solved 
-            ? "border-emerald-500/50 bg-emerald-500/5 hover:border-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]" 
+        className={`group relative flex min-h-[220px] w-full flex-col justify-between overflow-hidden rounded-2xl border p-6 text-left backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 ${solved
+            ? "border-emerald-500/50 bg-emerald-500/5 hover:border-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]"
             : "border-zinc-800/60 bg-zinc-900/50 hover:border-emerald-500/40 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)]"
-        }`}
+          }`}
       >
-        {/* Subtle hover glow */}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-emerald-500/0 via-transparent to-emerald-500/0 opacity-0 transition-opacity duration-300 group-hover:opacity-10" />
 
         <div className="relative z-10 w-full">
@@ -82,13 +77,11 @@ export function ChallengeCard({ challenge }: Props) {
             <h2 className="text-xl font-bold tracking-tight text-zinc-100 group-hover:text-emerald-400 transition-colors">
               {challenge.title}
             </h2>
-            
-            {/* Points / Solved Badge */}
-            <div className={`shrink-0 rounded-full border px-3 py-1 text-xs font-bold ${
-              solved 
-                ? "border-emerald-500/50 bg-emerald-500/20 text-emerald-400" 
+
+            <div className={`shrink-0 rounded-full border px-3 py-1 text-xs font-bold ${solved
+                ? "border-emerald-500/50 bg-emerald-500/20 text-emerald-400"
                 : "border-zinc-700 bg-zinc-800 text-zinc-300"
-            }`}>
+              }`}>
               {solved ? (
                 <span className="flex items-center gap-1">
                   <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -102,19 +95,17 @@ export function ChallengeCard({ challenge }: Props) {
             </div>
           </div>
 
-          {/* Category Badge */}
           <div className="inline-flex items-center rounded bg-zinc-800/50 px-2 py-1 text-xs font-medium text-zinc-400 border border-zinc-700/50">
             {challenge.category.name}
           </div>
         </div>
 
-        {/* Footer Area of the card */}
         <div className="relative z-10 mt-6 flex w-full items-center justify-between border-t border-zinc-800/50 pt-4">
           <span className="text-xs font-medium text-zinc-500 transition-colors group-hover:text-emerald-500">
             {solved ? "Review challenge" : "Open challenge"}
           </span>
-          <svg 
-            className="h-4 w-4 text-zinc-600 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-emerald-500" 
+          <svg
+            className="h-4 w-4 text-zinc-600 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-emerald-500"
             fill="none" viewBox="0 0 24 24" stroke="currentColor"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -122,10 +113,10 @@ export function ChallengeCard({ challenge }: Props) {
         </div>
       </button>
 
-      {/* Dialog / Modal Section */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="border-zinc-800/60 bg-zinc-950/95 backdrop-blur-xl text-zinc-100 sm:max-w-lg">
-          
+        {/* PERBAIKAN: sm:max-w-2xl agar lebih lebar, max-h-[90vh] dan overflow-y-auto untuk scroll */}
+      <DialogContent className="border-zinc-800/60 bg-zinc-950/95 backdrop-blur-xl text-zinc-100 sm:max-w-2xl max-h-[90vh] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-800 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-emerald-500/50">
+
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-emerald-400 flex items-center gap-2">
               {solved && (
@@ -138,14 +129,27 @@ export function ChallengeCard({ challenge }: Props) {
           </DialogHeader>
 
           <div className="space-y-6 mt-2">
-            
-            {/* Description Block */}
-            <div className="rounded-lg bg-zinc-900/50 p-4 border border-zinc-800/50 text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap">
+
+            <div className="rounded-lg bg-zinc-900/50 p-5 border border-zinc-800/50 text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap">
               {challenge.description}
             </div>
 
-            {/* Input & Submit */}
-            <div className="space-y-3">
+            {challenge.attachmentUrl && (
+              <a
+                href={challenge.attachmentUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 inline-flex items-center rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-400 transition hover:bg-emerald-500/20 hover:text-emerald-300"
+              >
+                {/* ICON DOWNLOAD DITAMBAHKAN DI SINI */}
+                <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download Attachment
+              </a>
+            )}
+
+            <div className="space-y-3 pt-4 border-t border-zinc-800/60">
               <Input
                 placeholder="AnsCTF{...}"
                 value={flag}

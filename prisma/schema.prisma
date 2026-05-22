@@ -47,6 +47,9 @@ model Challenge {
 
   flag        String
 
+  attachmentUrl  String?
+  attachmentName String?
+
   categoryId  String
   category    Category @relation(fields: [categoryId], references: [id])
 

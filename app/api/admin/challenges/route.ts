@@ -1,38 +1,25 @@
-import { NextResponse }
-from "next/server";
+import { NextResponse } from "next/server";
 
-import { prisma }
-from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 
-import { getUser }
-from "@/lib/auth/get-user";
+import { getUser } from "@/lib/auth/get-user";
 
-export async function POST(
-  req: Request
-) {
-
+export async function POST(req: Request) {
   try {
+    const user = await getUser();
 
-    const user =
-      await getUser();
-
-    if (
-      !user ||
-      user.role !== "ADMIN"
-    ) {
+    if (!user || user.role !== "ADMIN") {
       return NextResponse.json(
         {
-          message:
-            "Unauthorized",
+          message: "Unauthorized",
         },
         {
           status: 401,
-        }
+        },
       );
     }
 
-    const body =
-      await req.json();
+    const body = await req.json();
 
     const {
       title,
@@ -40,22 +27,18 @@ export async function POST(
       points,
       flag,
       categoryId,
+      attachmentUrl,
+      attachmentName,
     } = body;
 
-    if (
-      !title ||
-      !description ||
-      !flag ||
-      !categoryId
-    ) {
+    if (!title || !description || !flag || !categoryId) {
       return NextResponse.json(
         {
-          message:
-            "Missing fields",
+          message: "Missing fields",
         },
         {
           status: 400,
-        }
+        },
       );
     }
 
@@ -63,34 +46,31 @@ export async function POST(
       data: {
         title,
         description,
-        points:
-          Number(points),
+        points: Number(points),
 
         flag,
 
+        attachmentUrl,
+
+        attachmentName,
+
         categoryId,
 
-        authorId:
-          user.id,
+        authorId: user.id,
       },
     });
 
     return NextResponse.json({
-      message:
-        "Challenge created",
+      message: "Challenge created",
     });
-
   } catch {
-
     return NextResponse.json(
       {
-        message:
-          "Internal server error",
+        message: "Internal server error",
       },
       {
         status: 500,
-      }
+      },
     );
-
   }
 }

@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-
 import { Button } from "@/components/ui/button";
+
 import {
   Dialog,
   DialogContent,
@@ -13,16 +13,21 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+// IMPORT ChallengeForm yang sudah disempurnakan sebelumnya
 import { ChallengeForm } from "@/components/admin/challenge-form";
 
 type Props = {
-  categories: any[];
+  categories: {
+    id: string;
+    name: string;
+  }[];
 };
 
 export function CreateChallengeModal({ categories }: Props) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
+  // Nilai form sekarang di-handle oleh <ChallengeForm />
   async function handleSubmit(values: any) {
     try {
       const res = await fetch("/api/admin/challenges", {
@@ -30,7 +35,10 @@ export function CreateChallengeModal({ categories }: Props) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          ...values,
+          points: Number(values.points), // Pastikan points berbentuk angka
+        }),
       });
 
       const data = await res.json();
@@ -40,7 +48,7 @@ export function CreateChallengeModal({ categories }: Props) {
         return;
       }
 
-      toast.success("Challenge created successfully");
+      toast.success(data.message || "Challenge created!");
       setOpen(false);
       router.refresh();
     } catch {
@@ -60,20 +68,26 @@ export function CreateChallengeModal({ categories }: Props) {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="border-zinc-800/60 bg-zinc-950/95 backdrop-blur-xl text-zinc-100 sm:max-w-2xl">
+      <DialogContent className="border-zinc-800/60 bg-zinc-950/95 backdrop-blur-xl text-zinc-100 sm:max-w-3xl">
         
+        {/* Header Statis (Tidak ikut ter-scroll) */}
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-emerald-400">
             Create New Challenge
           </DialogTitle>
         </DialogHeader>
 
-        <div className="mt-4">
-          <ChallengeForm categories={categories} onSubmit={handleSubmit} />
+        {/* PERBAIKAN SCROLL: Dibungkus div khusus dengan max-h-[70vh] dan pr-2 (padding kanan agar scrollbar tidak menempel) */}
+        <div className="mt-2 max-h-[70vh] overflow-y-auto pr-3 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-800 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-emerald-500/50">
+          
+          <ChallengeForm 
+            categories={categories} 
+            onSubmit={handleSubmit} 
+          />
+
         </div>
 
       </DialogContent>
-
     </Dialog>
   );
 }

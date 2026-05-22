@@ -141,7 +141,7 @@ export function EditCategoryModal({
 
         </DialogTrigger>
 
-        <DialogContent className="border-white/10 bg-zinc-950 text-white">
+       <DialogContent className="border-zinc-800/60 bg-zinc-950/95 backdrop-blur-xl text-zinc-100 sm:max-w-2xl max-h-[90vh] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-800 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-emerald-500/50">
 
           <DialogHeader>
 

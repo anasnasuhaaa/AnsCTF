@@ -1,11 +1,8 @@
-import { NextResponse }
-from "next/server";
+import { NextResponse } from "next/server";
 
-import { prisma }
-from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 
-import { getUser }
-from "@/lib/auth/get-user";
+import { getUser } from "@/lib/auth/get-user";
 
 export async function PATCH(
   req: Request,
@@ -13,76 +10,59 @@ export async function PATCH(
     params: Promise<{
       id: string;
     }>;
-  }
+  },
 ) {
-
   try {
+    const user = await getUser();
 
-    const user =
-      await getUser();
-
-    if (
-      !user ||
-      user.role !== "ADMIN"
-    ) {
+    if (!user || user.role !== "ADMIN") {
       return NextResponse.json(
         {
-          message:
-            "Unauthorized",
+          message: "Unauthorized",
         },
         {
           status: 401,
-        }
+        },
       );
     }
 
-    const { id } =
-      await context.params;
+    const { id } = await context.params;
 
-    const body =
-      await req.json();
+    const body = await req.json();
 
     await prisma.challenge.update({
       where: {
         id,
       },
       data: {
-        title:
-          body.title,
+        title: body.title,
 
-        description:
-          body.description,
+        description: body.description,
 
-        points:
-          Number(
-            body.points
-          ),
+        points: Number(body.points),
 
-        flag:
-          body.flag,
+        flag: body.flag,
 
-        categoryId:
-          body.categoryId,
+        attachmentUrl: body.attachmentUrl,
+
+        attachmentName: body.attachmentName,
+
+        categoryId: body.categoryId,
       },
     });
 
     return NextResponse.json({
-      message:
-        "Challenge updated",
+      message: "Challenge updated",
     });
-
   } catch {
-
     return NextResponse.json(
       {
-        message:
-          "Internal server error",
+        message: "Internal server error",
       },
       {
         status: 500,
-      }
+      },
     );
-
   }
 }
 
@@ -92,31 +72,23 @@ export async function DELETE(
     params: Promise<{
       id: string;
     }>;
-  }
+  },
 ) {
-
   try {
+    const user = await getUser();
 
-    const user =
-      await getUser();
-
-    if (
-      !user ||
-      user.role !== "ADMIN"
-    ) {
+    if (!user || user.role !== "ADMIN") {
       return NextResponse.json(
         {
-          message:
-            "Unauthorized",
+          message: "Unauthorized",
         },
         {
           status: 401,
-        }
+        },
       );
     }
 
-    const { id } =
-      await context.params;
+    const { id } = await context.params;
 
     await prisma.solve.deleteMany({
       where: {
@@ -131,21 +103,16 @@ export async function DELETE(
     });
 
     return NextResponse.json({
-      message:
-        "Challenge deleted",
+      message: "Challenge deleted",
     });
-
   } catch {
-
     return NextResponse.json(
       {
-        message:
-          "Internal server error",
+        message: "Internal server error",
       },
       {
         status: 500,
-      }
+      },
     );
-
   }
 }
