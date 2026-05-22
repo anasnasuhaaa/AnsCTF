@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  PLAYER
+}
+
+model User {
+  id        String   @id @default(cuid())
+
+  username  String   @unique
+  password  String
+
+  role      Role     @default(PLAYER)
+
+  score     Int      @default(0)
+
+  solves    Solve[]
+
+  authoredChallenges Challenge[] @relation("ChallengeAuthor")
+
+  createdAt DateTime @default(now())
+}
+
+model Category {
+  id         String      @id @default(cuid())
+
+  name       String      @unique
+
+  challenges Challenge[]
+}
+
+model Challenge {
+  id          String   @id @default(cuid())
+
+  title       String
+  description String
+
+  points      Int
+
+  flag        String
+
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+
+  authorId    String
+  author      User @relation("ChallengeAuthor", fields: [authorId], references: [id])
+
+  solves      Solve[]
+
+  createdAt   DateTime @default(now())
+}
+
+model Solve {
+  id           String   @id @default(cuid())
+
+  userId       String
+  challengeId  String
+
+  user         User @relation(fields: [userId], references: [id])
+
+  challenge    Challenge @relation(fields: [challengeId], references: [id])
+
+  createdAt    DateTime @default(now())
+
+  @@unique([userId, challengeId])
+}
