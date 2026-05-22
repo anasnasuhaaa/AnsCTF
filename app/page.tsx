@@ -22,7 +22,7 @@ export default function HomePage() {
             {/* Glowing Badge */}
             <div className="inline-flex items-center rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-1.5 text-sm font-medium text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.1)] backdrop-blur-sm">
               <span className="flex h-2 w-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
-              Modern Competitive Cybersecurity Platform
+              Platform for Cybersecurity Enthusiasts
             </div>
 
             {/* Hero Title */}
