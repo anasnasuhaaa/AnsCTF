@@ -54,61 +54,63 @@ export default async function LeaderboardPage() {
               </thead>
 
               <tbody className="divide-y divide-zinc-800/50">
-                {users.map((user, index) => {
-                  const isTop1 = index === 0;
-                  const isTop2 = index === 1;
-                  const isTop3 = index === 2;
+                {users
+                  .filter((user) => user.role !== "ADMIN") // Memfilter agar ADMIN tidak masuk
+                  .map((user, index) => {
+                    const isTop1 = index === 0;
+                    const isTop2 = index === 1;
+                    const isTop3 = index === 2;
 
-                  return (
-                    <tr
-                      key={user.id}
-                      className="group hover:bg-zinc-800/30 transition-colors"
-                    >
-                      {/* Rank Column */}
-                      <td className="px-6 py-4 pl-8">
-                        <div className="flex items-center">
-                          {isTop1 ? (
-                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-500/20 text-yellow-500 font-bold border border-yellow-500/30 shadow-[0_0_10px_rgba(234,179,8,0.2)]">
-                              1
-                            </span>
-                          ) : isTop2 ? (
-                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-300/20 text-zinc-300 font-bold border border-zinc-300/30">
-                              2
-                            </span>
-                          ) : isTop3 ? (
-                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-600/20 text-amber-500 font-bold border border-amber-600/30">
-                              3
-                            </span>
-                          ) : (
-                            <span className="flex h-8 w-8 items-center justify-center text-zinc-500 font-mono text-sm">
-                              #{index + 1}
-                            </span>
-                          )}
-                        </div>
-                      </td>
-
-                      {/* Player Column */}
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          {/* Avatar Placeholder */}
-                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-950 text-xs font-bold text-emerald-400 border border-zinc-800 group-hover:border-emerald-500/50 transition-colors">
-                            {user.username.charAt(0).toUpperCase()}
+                    return (
+                      <tr
+                        key={user.id}
+                        className="group hover:bg-zinc-800/30 transition-colors"
+                      >
+                        {/* Rank Column */}
+                        <td className="px-6 py-4 pl-8">
+                          <div className="flex items-center">
+                            {isTop1 ? (
+                              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-500/20 text-yellow-500 font-bold border border-yellow-500/30 shadow-[0_0_10px_rgba(234,179,8,0.2)]">
+                                1
+                              </span>
+                            ) : isTop2 ? (
+                              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-300/20 text-zinc-300 font-bold border border-zinc-300/30">
+                                2
+                              </span>
+                            ) : isTop3 ? (
+                              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-600/20 text-amber-500 font-bold border border-amber-600/30">
+                                3
+                              </span>
+                            ) : (
+                              <span className="flex h-8 w-8 items-center justify-center text-zinc-500 font-mono text-sm">
+                                #{index + 1}
+                              </span>
+                            )}
                           </div>
-                          <span className={`font-medium ${isTop1 ? 'text-emerald-400' : 'text-zinc-200'} group-hover:text-emerald-300 transition-colors`}>
-                            {user.username}
-                          </span>
-                        </div>
-                      </td>
+                        </td>
 
-                      {/* Score Column */}
-                      <td className="px-6 py-4 text-right pr-8">
-                        <span className="font-mono text-lg font-semibold text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.2)]">
-                          {user.score}
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
+                        {/* Player Column */}
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            {/* Avatar Placeholder */}
+                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-950 text-xs font-bold text-emerald-400 border border-zinc-800 group-hover:border-emerald-500/50 transition-colors">
+                              {user.username.charAt(0).toUpperCase()}
+                            </div>
+                            <span className={`font-medium ${isTop1 ? 'text-emerald-400' : 'text-zinc-200'} group-hover:text-emerald-300 transition-colors`}>
+                              {user.username}
+                            </span>
+                          </div>
+                        </td>
+
+                        {/* Score Column */}
+                        <td className="px-6 py-4 text-right pr-8">
+                          <span className="font-mono text-lg font-semibold text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.2)]">
+                            {user.score}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
               </tbody>
             </table>
           </div>
