@@ -79,7 +79,6 @@ export default function LoginPage() {
               <Label className="text-zinc-300">Username</Label>
               <Input
                 className="h-11 bg-zinc-950/50 border-zinc-800 focus-visible:ring-1 focus-visible:ring-emerald-400 focus-visible:border-transparent transition-all"
-                placeholder="johndoe"
                 value={form.username}
                 onChange={(e) =>
                   setForm({
@@ -97,7 +96,6 @@ export default function LoginPage() {
               <Input
                 type="password"
                 className="h-11 bg-zinc-950/50 border-zinc-800 focus-visible:ring-1 focus-visible:ring-emerald-400 focus-visible:border-transparent transition-all"
-                placeholder="••••••••"
                 value={form.password}
                 onChange={(e) =>
                   setForm({
