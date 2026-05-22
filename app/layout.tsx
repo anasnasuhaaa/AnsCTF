@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { Footer } from "@/components/layout/footer";
 
 import { Toaster } from "sonner";
 
@@ -26,6 +27,7 @@ export default function RootLayout({
             position="top-center"
           />
         </ThemeProvider>
+        <Footer />
       </body>
     </html>
   );
