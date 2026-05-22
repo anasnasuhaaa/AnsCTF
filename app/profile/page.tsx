@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { getUser } from "@/lib/auth/get-user";
 
 import { UserNavbar }
-from "@/components/layout/user-navbar";
+  from "@/components/layout/user-navbar";
 
 export default async function ProfilePage() {
 
@@ -57,7 +57,8 @@ export default async function ProfilePage() {
     <main className="min-h-screen bg-zinc-950 text-white">
 
       <UserNavbar
-        username={profile.username}
+        username={user.username}
+        role={user.role}
       />
 
       <div className="mx-auto max-w-6xl p-8">
